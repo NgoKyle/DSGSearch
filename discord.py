@@ -12,6 +12,8 @@ def sendDiscord(message, buyType, sku, condition):
                 url = 'https://discordapp.com/api/webhooks/697145930612474007/BuYoVBFTpBAkovHYyXgobnu2Y-iMdHJb7VEh11XOONAe2z_gnBiuD5NntFnGYEecgFlh'
             elif condition in '97701': #bend
                 url = 'https://discordapp.com/api/webhooks/697146053409112266/1_QjYxznO04s4-M3A6oME8GYuHA8RscTj6IoilZm3zpCEwxWN-iZlro66RL4jobJJDxF'
+            elif condition in '94806': #sfo
+                url = 'https://discordapp.com/api/webhooks/699312768704315512/7IA3eR4uUSPnRc5YvM9FvXx1WzagqzsIEnt1pjnPBvLj-6pDXWjQdZ-HQ-mu9GWDERPp'
             else: #adjustable - everywhere
                 url = 'https://discordapp.com/api/webhooks/697209785308807200/N43rRgJLgO-BgXhue9WY3Bs5tFlJTE-m6SXnqjRJRHJ0Qp_xoC0l6h0H5enu3WkaY5rA'
 
