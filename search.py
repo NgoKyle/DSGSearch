@@ -36,6 +36,10 @@ with open('links.txt','r') as f:
         except:
             continue
 
+    links.append("https://www.dickssportinggoods.com/p/bowflex-selecttech-552-dumbbells-16bfxuslcttchdmbbslc/16bfxuslcttchdmbbslc")
+    names.append("Bowflex selecttech 552")
+    skus.append("11465449")
+
 def parseLocation(sets, name, link, sku, result, zip):
     qty = result['skus'][0]['qty']
     ats = qty['ats']
