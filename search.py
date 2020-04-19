@@ -83,7 +83,7 @@ def worker(i):
             }
 
             try:
-                r = s.get(url, timeout=7, proxies=proxy, headers=getheaders).json()
+                r = requests.get(url, timeout=7, proxies=proxy, headers=getheaders).json()
                 print(zip, r)
             except:
                 continue
