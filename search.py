@@ -8,11 +8,6 @@ from bs4 import BeautifulSoup
 s = requests.Session()
 s.get("https://www.dickssportinggoods.com/")
 
-proxies = {
-  "http": "http://108.59.14.203:13010",
-  "https": "http://108.59.14.203:13010"
-}
-
 zipcode = []
 with open('zipcode.txt','r') as f:
     zipList = f.read().splitlines()
@@ -51,7 +46,7 @@ def parseLocation(sets, name, link, sku, result, zip):
         city = result['store']['city']
         state = result['store']['state']
 
-        key = street + sku
+        key = street + sku + ats
         #print("key: " + key)
         if key in sets:
             #print("key in set")
@@ -79,9 +74,15 @@ def worker(i):
             'if-none-match': '"42f-562062e8ef580-gzip"', 'upgrade-insecure-requests': '1',
             'user-agent': "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.149 Safari/537.36"
         }
+
+        proxy = {
+          "http": "http://108.59.14.203:13010",
+          "https": "http://108.59.14.203:13010",
+        }
+
         try:
-            r = s.get(url, timeout=7, proxies=proxies, headers=getheaders).json()
-            #print(zip, r)
+            r = s.get(url, timeout=7, proxies=proxy, headers=getheaders).json()
+            print(zip, r)
         except:
             continue
 
