@@ -5,9 +5,6 @@ import multiprocessing
 from discord_webhook import DiscordWebhook
 from bs4 import BeautifulSoup
 
-s = requests.Session()
-s.get("https://www.dickssportinggoods.com/")
-
 zipcode = []
 with open('zipcode.txt','r') as f:
     zipList = f.read().splitlines()
@@ -64,40 +61,41 @@ def parseLocation(sets, name, link, sku, result, zip):
 
 def worker(i):
     sets = set()
-    for zip in zipList:
-        sku = skus[i]
-        name = names[i]
-        link = links[i]
+    while True:
+        for zip in zipList:
+            sku = skus[i]
+            name = names[i]
+            link = links[i]
 
-        #for sku, name in skus.items():
-        url = 'https://availability.dickssportinggoods.com/ws/v2/omni/stores?addr={}&radius=100&uom=imperial&lob=dsg&sku={}&res=locatorsearch&qty=1'.format(zip, sku)
-        getheaders = {
-            'accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8',
-            'accept-encoding': 'gzip, deflate, br', 'accept-language': 'en-US,en;q=0.9',
-            'cache-control': 'max-age=0', 'if-modified-since': 'Fri, 05 Jan 2018 11',
-            'if-none-match': '"42f-562062e8ef580-gzip"', 'upgrade-insecure-requests': '1',
-            'user-agent': "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.149 Safari/537.36"
-        }
+            #for sku, name in skus.items():
+            url = 'https://availability.dickssportinggoods.com/ws/v2/omni/stores?addr={}&radius=100&uom=imperial&lob=dsg&sku={}&res=locatorsearch&qty=1'.format(zip, sku)
+            getheaders = {
+                'accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8',
+                'accept-encoding': 'gzip, deflate, br', 'accept-language': 'en-US,en;q=0.9',
+                'cache-control': 'max-age=0', 'if-modified-since': 'Fri, 05 Jan 2018 11',
+                'if-none-match': '"42f-562062e8ef580-gzip"', 'upgrade-insecure-requests': '1',
+                'user-agent': "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.149 Safari/537.36"
+            }
 
-        proxy = {
-          "http": "http://108.59.14.203:13010",
-          "https": "http://108.59.14.203:13010",
-        }
+            proxy = {
+              "http": "http://108.59.14.203:13010",
+              "https": "http://108.59.14.203:13010",
+            }
 
-        try:
-            r = s.get(url, timeout=7, proxies=proxy, headers=getheaders).json()
-            print(zip, r)
-        except:
-            continue
+            try:
+                r = s.get(url, timeout=7, proxies=proxy, headers=getheaders).json()
+                print(zip, r)
+            except:
+                continue
 
-        if 'data' not in r:
-            continue
-        if(len(r['data']['results']) == 0):
-            continue
+            if 'data' not in r:
+                continue
+            if(len(r['data']['results']) == 0):
+                continue
 
-        result = r['data']['results']
-        for j in range(len(result)):
-            parseLocation(sets, name, link, sku, result[j], zip)
+            result = r['data']['results']
+            for j in range(len(result)):
+                parseLocation(sets, name, link, sku, result[j], zip)
 
 
 for i in range(len(links)):
