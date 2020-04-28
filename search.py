@@ -46,6 +46,7 @@ def parseLocation(sets, name, link, sku, result, zip):
         street = result['store']['street1']
         city = result['store']['city']
         state = result['store']['state']
+        loc = result['store']['location']
 
         key = street + sku + ats
         #print("key: " + key)
@@ -54,10 +55,32 @@ def parseLocation(sets, name, link, sku, result, zip):
             return
         sets.add(key)
 
-        message = time.strftime('%a %H:%M:%S') + "\t{}{}\nStreet: {}\nLocation: {}, {} \t zipcode: {}\n{}".format(name, str(qty), street, city, state, zipcode, link)
+        backdoor = """
+        fetch("https://www.dickssportinggoods.com/AjaxRESTOrderItemAdd", {
+            "headers": {
+                "accept": "/",
+                "accept-language": "en-US,en;q=0.9",
+                "content-type": "application/x-www-form-urlencoded",
+                "sec-fetch-dest": "empty",
+                "sec-fetch-mode": "cors",
+                "sec-fetch-site": "same-origin",
+                "x-auth-cookie-required": "true"
+            },
+            "referrer": "https://www.dickssportinggoods.com/p/bowflex-selecttech-552-dumbbells-16bfxuslcttchdmbbslc/16bfxuslcttchdmbbslc",
+            "referrerPolicy": "no-referrer-when-downgrade",
+            "body": "storeId=15108&catalogId=12301&langId=-1&orderId=.&addtocart=Y&calculateOrder=0&catEntryId=1294213&quantity=1&warCatEntry=false&partNumber=11465449&requesttype=ajax&inventoryValidation=false&bopisStLocId="""+loc+"""&bopisItem=Y",
+            "method": "POST",
+            "mode": "cors",
+            "credentials": "include"
+        });
+        """
+        message = time.strftime('%a %H:%M:%S') + "\t{}{}\nStreet: {}\nLocation: {}, {} \t zipcode: {}\t bopisStLocId: {}\n{}".format(name, str(qty), street, city, state, zipcode, loc, link)
         print(message)
 
-        discord.sendDiscord(message, 'curbside', skus[i], 'everywhere')
+        if skus[i] in '11465449':
+            discord.sendDiscord(message, 'curbside', skus[i], 'bowflex')
+        else:
+            discord.sendDiscord(message, 'curbside', skus[i], 'everywhere')
 
 def worker(i):
     sets = set()
