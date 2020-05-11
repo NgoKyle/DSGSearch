@@ -111,6 +111,9 @@ def worker(i):
             except:
                 continue
 
+            if r is None or r['data'] is None or r['data']['results'] is None:
+                continue
+
             if 'data' not in r:
                 continue
             if(len(r['data']['results']) == 0):
